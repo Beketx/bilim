@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+    web:
+        build:
+            context: .
+        command:
+          - /bin/sh
+          - /code/scripts/start.sh
+        volumes:
+          # - '${PWD}/start.sh:/code/start.sh'
+          # - './gunicorn:/code/socket'
+          # - './media:/code/media'
+          # - './static:/code/static'
+          # - '.:/code'
+          - static_data:/vol/web
+        depends_on:
+            - postgresql
+
+    postgresql:
+        image: postgres:13.4
+        restart: always
+        volumes:
+            - 'pg_data:/var/lib/postgresql/data'
+        environment:
+          - POSTGRES_PASSWORD=password
+        ports:
+          - "5432:5432"
+
+    proxy:
+        build:
+            context: ./proxy
+        volumes:
+            - static_data:/vol/static
+        ports:
+            - "8080:8080"
+        depends_on:
+            - web
+
+volumes:
+    static_data:
+    pg_data:
