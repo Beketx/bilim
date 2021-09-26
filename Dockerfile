@@ -6,6 +6,7 @@ COPY ./requirements.txt /requirements.txt
 RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
 RUN apk add postgresql-dev jpeg-dev zlib-dev libjpeg
 RUN pip install --upgrade pip
+RUN pip install psycopg2
 RUN pip install -r /requirements.txt
 RUN apk del .tmp
 
