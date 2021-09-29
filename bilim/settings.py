@@ -30,10 +30,10 @@ SECRET_KEY = 'django-insecure-bph*!xt=r0vfrdm6$0&gtaz_@ce(%d=l@)w2v5^8n#n7fapzib
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(env('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS_ENV = env('ALLOWED_HOSTS')
-if ALLOWED_HOSTS_ENV:
-    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+ALLOWED_HOSTS = ['159.89.12.164', '127.0.0.1', 'localhost', '0.0.0.0']
+# ALLOWED_HOSTS_ENV = env('ALLOWED_HOSTS')
+# if ALLOWED_HOSTS_ENV:
+#     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 
 # Application definition
@@ -82,14 +82,24 @@ WSGI_APPLICATION = 'bilim.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env("POSTGRES_DB"),
+#         'USER': env("POSTGRES_USER"),
+#         'PASSWORD': env("POSTGRES_PASSWORD"),
+#         'HOST': env("POSTGRES_HOST"),
+#         'PORT': env("POSTGRES_PORT")
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("POSTGRES_DB"),
-        'USER': env("POSTGRES_USER"),
-        'PASSWORD': env("POSTGRES_PASSWORD"),
-        'HOST': env("POSTGRES_HOST"),
-        'PORT': env("POSTGRES_PORT")
+        'NAME': 'prod_db',
+        'USER': 'admin',
+        'PASSWORD': 'devpass',
+        'HOST': 'postgresql',
+        'PORT': 5432
     }
 }
 
