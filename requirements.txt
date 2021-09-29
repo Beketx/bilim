@@ -6,3 +6,4 @@ gunicorn
 Pillow==8.3.1
 celery==5.1.2
 requests==2.26.0
+environ
