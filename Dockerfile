@@ -2,7 +2,7 @@ FROM python:3.8.3-alpine
 
 
 ENV MICRO_SERVICE=/home/app/microservice
-
+ENV APP_USER=beket
 RUN addgroup -S $APP_USER && adduser -S $APP_USER -G $APP_USER
 
 # set work directory
