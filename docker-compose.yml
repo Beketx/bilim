@@ -1,17 +1,28 @@
-version: '3.7'
+version: "3.9"
 services:
-  nginx:
-    build:
-      context: ./docker/nginx
-    ports:
-      - 1300:80
+  db:
+    image: postgres:11-alpine
     volumes:
-      - static_volume:/home/app/microservice/static
+      - 'postgres_data:/var/lib/postgresql/data'
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGPORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+    restart: always
+#    ports:
+#      - '5432:5432'
+  backend:
+    build:
+        context: .
+    image: backend
+    expose:
+      - ${APP_PORT}
+    env_file:
+      - ./.env
     depends_on:
-      - web
-    restart: "on-failure"
-  web:
-    build: . #build the image for the web service from the dockerfile in parent directory
+      - db
     command: sh -c "python manage.py makemigrations &&
                     python manage.py migrate &&
                     python manage.py collectstatic &&
@@ -19,25 +30,18 @@ services:
     volumes:
       - .:/microservice:rw # map data and files from parent directory in host to microservice directory in docker containe
       - static_volume:/home/app/microservice/static
-    env_file:
-      - .env
-    image: backend
-    expose:
-      - ${APP_PORT}
-    restart: always
-    depends_on:
-      - db
-  db:
-    image: postgres:11-alpine
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - 'postgres_data:/var/lib/postgresql/data/'
-    environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - PGPORT=${POSTGRES_PORT}
-      - POSTGRES_USER=${POSTGRES_USER}
-    restart: always
+      - static_volume:/home/app/microservice/static
+    ports:
+      - 1300:80
+    depends_on:
+      - backend
+      - db
+
 volumes:
   postgres_data:
   static_volume:
