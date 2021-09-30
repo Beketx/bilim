@@ -9,7 +9,6 @@ services:
           - /app/scripts/entrypoint.sh
         volumes:
             - static_data:/vol/web
-            - static_data:/vol/media
         depends_on:
          - db
         expose:
@@ -20,9 +19,8 @@ services:
             context: ./docker/nginx
             dockerfile: Dockerfile
         volumes:
-            - static_data:/vol/static
-            - static_data:/vol/media
-
+            - static_data:/vol/web/static
+            - static_data:/vol/web/media
         ports:
             - "80:80"
         depends_on:
