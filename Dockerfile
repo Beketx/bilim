@@ -1,27 +1,27 @@
-FROM python:3.8-alpine
+FROM python:3.9-slim-buster
 
-ENV PATH="/scripts:${PATH}"
+LABEL MAINTAINER="Beket Samaluly"
 
-COPY ./requirements.txt /requirements.txt
-RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
-RUN apk add postgresql-dev jpeg-dev zlib-dev libjpeg
-RUN pip install --upgrade pip
-RUN pip install psycopg2
-RUN pip install -r /requirements.txt
-RUN apk del .tmp
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN mkdir /app
-COPY . /app
-WORKDIR /app
-COPY ./scripts /scripts
+RUN apt-get update && \
+    # Без установки рекомендованных пакетов
+    apt-get install -y --no-install-recommends \
+    # Для установки RU.UTF-8
+    locales \
+    # Пакеты для компиляции
+    build-essential \
+    # Для работы с psycopg2-binary
+    libpq-dev
 
-RUN chmod +x /scripts/*
+RUN locale-gen en_US ru_RU.UTF-8
+COPY requirements.txt /code/
 
-RUN mkdir -p /vol/web/media
-RUN mkdir -p /vol/web/static
-RUN adduser -D user
-RUN chown -R user:user /vol
-RUN chmod -R 755 /vol/web
-USER user
+WORKDIR /code
 
-CMD ["entrypoint.sh"]
+RUN pip3 install --upgrade pip==21.2.4
+
+RUN pip3 install -r requirements.txt
+
+COPY . /code/

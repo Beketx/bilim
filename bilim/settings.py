@@ -25,15 +25,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bph*!xt=r0vfrdm6$0&gtaz_@ce(%d=l@)w2v5^8n#n7fapzib'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['159.89.12.164', '127.0.0.1', 'localhost', '0.0.0.0']
-# ALLOWED_HOSTS_ENV = env('ALLOWED_HOSTS')
-# if ALLOWED_HOSTS_ENV:
-#     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS_ENV = env('ALLOWED_HOSTS')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 
 # Application definition
@@ -82,26 +82,26 @@ WSGI_APPLICATION = 'bilim.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': env("POSTGRES_DB"),
-#         'USER': env("POSTGRES_USER"),
-#         'PASSWORD': env("POSTGRES_PASSWORD"),
-#         'HOST': env("POSTGRES_HOST"),
-#         'PORT': env("POSTGRES_PORT")
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'prod_db',
-        'USER': 'admin',
-        'PASSWORD': 'devpass',
-        'HOST': 'postgresql',
-        'PORT': 5432
+        'NAME': env("POSTGRES_DB"),
+        'USER': env("POSTGRES_USER"),
+        'PASSWORD': env("POSTGRES_PASSWORD"),
+        'HOST': env("POSTGRES_HOST"),
+        'PORT': env("POSTGRES_PORT")
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'prod_db',
+#         'USER': 'admin',
+#         'PASSWORD': 'devpass',
+#         'HOST': 'postgresql',
+#         'PORT': 5432
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -138,12 +138,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-STATIC_URL = '/static/static/'
-MEDIA_URL = '/static/media/'
-
-STATIC_ROOT = '/vol/web/static'
-MEDIA_ROOT = '/vol/web/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
