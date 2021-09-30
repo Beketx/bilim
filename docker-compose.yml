@@ -40,8 +40,8 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - web
+      - backend
       - db
 
 volumes:
-  pg_data:
+  postgres_data:
