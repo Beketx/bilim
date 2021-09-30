@@ -24,7 +24,7 @@ services:
     image: backend
     expose:
       - ${APP_PORT}
-    restart: "on-failure"
+    restart: always
     depends_on:
       - db
   db:
@@ -37,7 +37,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - PGPORT=${POSTGRES_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
-    restart: "on-failure"
+    restart: always
 volumes:
   postgres_data:
   static_volume:
