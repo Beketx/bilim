@@ -2,10 +2,10 @@ Django==3.2
 django-environ==0.4.5
 djangorestframework==3.12.4
 django-cors-headers==3.7.0
-gunicorn
+uWSGI
 Pillow==8.3.1
 celery==5.1.2
 requests==2.26.0
 environ
-psycopg2-binary
+psycopg2
 django-environ
