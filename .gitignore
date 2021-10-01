@@ -6,4 +6,4 @@ env
 media/*
 storage
 venv
-*/.idea
+.idea
