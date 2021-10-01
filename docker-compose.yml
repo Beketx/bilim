@@ -29,5 +29,8 @@ services:
       ports:
         - "80:80"
         - "443:443"
+      volumes:
+        - static_data:/static
+        - static_data:/media
       depends_on:
         - web
