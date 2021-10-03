@@ -7,7 +7,7 @@ server {
     }
 
     location / {
-        proxy_pass http://${APP_HOST}:${APP_PORT};
+        proxy_pass http://backend:9000;
         proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
