@@ -10,6 +10,9 @@ $ docker exec -it django_docker_db_1 bash
 /$ createdb --username myproject myproject
 
 
+docker-compose -f docker-compose-deploy.yml run --rm backend sh -c "python manage.py createsuperuser"
+
+
 There's more...
 
 You can destroy Docker containers with the docker-compose down command and rebuild them with your build script:
