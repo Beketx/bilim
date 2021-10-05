@@ -24,7 +24,7 @@ from authorize.urls import router as auth_router
 from bilim import settings
 
 router = DefaultRouter()
-router.register.extend(auth_router.registry)
+router.registry.extend(auth_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
