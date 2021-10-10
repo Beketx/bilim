@@ -28,7 +28,7 @@ router.registry.extend(auth_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include('authorize.urls'))
 ]
 urlpatterns += staticfiles_urlpatterns('static')
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

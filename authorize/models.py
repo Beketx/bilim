@@ -52,7 +52,7 @@ class User(AbstractBaseUser):
     full_name = models.CharField('Name Surname', max_length=100, null=True)
     phone = models.CharField('Mobile phone', unique=True, max_length=12, help_text='77071113377',
                              null=True)
-    photo = models.ImageField('Photo', upload_to='users', null=True, blank=True)
+    photo = models.ImageField('Photo', null=True, blank=True)
     created_at = models.DateTimeField('Date of registration', null=True, blank=True)
     is_active = models.BooleanField('Is active?', default=False)
     is_admin = models.BooleanField('Is admin?', default=False)
@@ -68,9 +68,48 @@ class User(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
+    def has_module_perms(self, arg):
+        return True
+
+    def has_perm(self, arg):
+        return True
+
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+
+class UserToken(models.Model):
+    """The default authorization token model"""
+    key = models.CharField(_("Key"), max_length=40, unique=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='auth_tokens',
+        on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    created = models.DateTimeField(_("Created"), auto_now_add=True)
+    user_agent = models.CharField(max_length=1000, null=True, blank=True)
+    ip_address = models.CharField(max_length=50, null=True, blank=True)
+
+    class Meta:
+        # Work around for a bug in Django:
+        # https://code.djangoproject.com/ticket/19422
+        #
+        # Also see corresponding ticket:
+        # https://github.com/encode/django-rest-framework/issues/705
+        abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
+        verbose_name = _("Token")
+        verbose_name_plural = _("Tokens")
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super(UserToken, self).save(*args, **kwargs)
+
+    def generate_key(self):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def __str__(self):
+        return self.key
 
 
 class UserActivation(models.Model):
@@ -89,3 +128,8 @@ class UserActivation(models.Model):
             verbose_name_plural = 'Activation'
 
 
+class Profile(models.Model):
+    user = models.OneToOneField('authorize.User', on_delete=models.CASCADE,
+                                    related_name='user_profile', verbose_name='User')
+    school = models.OneToOneField('school.School', on_delete=models.CASCADE,
+                                    related_name='school_profile', verbose_name='School')

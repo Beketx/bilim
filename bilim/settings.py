@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from kombu import Queue
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,8 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Project modules
     'core',
-    'authorize'
+    'authorize',
+    'school',
+    # REQUIREMENTS
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'celery'
 ]
 
 MIDDLEWARE = [
@@ -88,6 +96,16 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_URL') + "/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        }
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -108,6 +126,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'authorize.services.auth_token.TokenAuthenticationCustom',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -121,6 +152,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'authorize.User'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -131,7 +164,44 @@ MEDIA_URL = '/static/media/'
 MEDIA_ROOT = '/vol/web/media'
 STATIC_ROOT = '/vol/web/static'
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+CELERY_IGNORE_RESULT = True
+
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_HIGH = 'high'
+
+CELERY_QUEUES = (
+    Queue('default', routing_key='default'),
+    Queue('high', routing_key='high'),
+)
+CELERY_ROUTES = {
+    # -- HIGH PRIORITY QUEUE -- #
+    'authorize.tasks.user_mail': {'queue': 'high'},
+    # 'Operation.tasks.email_send_check_pdf': {'queue': 'high'},
+    # 'Operation.tasks.email_z_report': {'queue': 'high'},
+    # 'Operation.tasks.one_day_shift': {'queue': 'high'},
+    # 'Place.tasks.auto_closin_shift_task': {'queue': 'high'},
+    # -- DEFAULT QUEUE -- #
+    # 'Place.tasks.check_blocking': {'queue': 'default'},
+    # 'Place.tasks.offline_mode': {'queue': 'default'},
+    # 'Place.tasks.send_offline': {'queue': 'default'},
+    # 'Server.tasks.graylogging': {'queue': 'default'},
+}
+
+CELERYD_PREFETCH_MULTIPLIER = os.environ.get('CELERYD_PREFETCH_MULTIPLIER')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# EMAIL CONFIG
+# -----------------------------------------------------------------
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USER_NAME = os.environ.get('EMAIL_USER_NAME')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_USE_TLS = True

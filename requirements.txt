@@ -9,3 +9,5 @@ requests==2.26.0
 environ
 psycopg2
 django-environ
+celery==5.1.2
+django_redis
