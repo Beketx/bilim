@@ -164,13 +164,16 @@ MEDIA_URL = '/static/media/'
 MEDIA_ROOT = '/vol/web/media'
 STATIC_ROOT = '/vol/web/static'
 
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    'http://185.100.67.153'
+]
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
 CELERY_IGNORE_RESULT = True
-
 CELERY_DEFAULT_QUEUE = 'default'
 CELERY_DEFAULT_HIGH = 'high'
-
 CELERY_QUEUES = (
     Queue('default', routing_key='default'),
     Queue('high', routing_key='high'),
@@ -188,7 +191,6 @@ CELERY_ROUTES = {
     # 'Place.tasks.send_offline': {'queue': 'default'},
     # 'Server.tasks.graylogging': {'queue': 'default'},
 }
-
 CELERYD_PREFETCH_MULTIPLIER = os.environ.get('CELERYD_PREFETCH_MULTIPLIER')
 
 # Default primary key field type

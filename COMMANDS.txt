@@ -1,4 +1,4 @@
-docker-compose -f docker-compose-deploy.yml run --rm backend sh -c "python manage.py createsuperuser"
+docker-compose -f docker-compose-deploy.yml run --rm backend sh -c "python manage.py makemigrations"
 
 
 
