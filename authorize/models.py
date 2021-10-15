@@ -99,7 +99,7 @@ class UserToken(models.Model):
         abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
         verbose_name = _("Token")
         verbose_name_plural = _("Tokens")
-
+#13
     def save(self, *args, **kwargs):
         if not self.key:
             self.key = self.generate_key()
