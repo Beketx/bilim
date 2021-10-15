@@ -54,7 +54,7 @@ class AuthViewSet(viewsets.GenericViewSet):
         user = user_email_existence(email=email)
         send_renew_link_to_mail(user, email, code)
         return Response({'status': 1, 'detail': 'Successfully sent to your email!'})
-
+#123
     @action(detail=False, methods=['get'])
     def activate(self, request, **kwargs):
         """Activating an account with a code from your email"""
