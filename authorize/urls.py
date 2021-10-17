@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 
-from .views import TestView, TestViewSet, AuthViewSet
+from authorize.views import TestView, TestViewSet, AuthViewSet
 
 router = DefaultRouter()
 router.register(r'testviewset', TestViewSet, basename='test')

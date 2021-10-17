@@ -21,14 +21,17 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from authorize.urls import router as auth_router
+from university.urls import router as university_router
 from bilim import settings
 
 router = DefaultRouter()
 router.registry.extend(auth_router.registry)
+router.registry.extend(university_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('authorize.urls'))
+    path('api/', include('authorize.urls')),
+    path('api/', include(router.urls))
 ]
 urlpatterns += staticfiles_urlpatterns('static')
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

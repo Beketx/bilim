@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'core',
     'authorize',
     'school',
+    'university',
+    'student',
     # REQUIREMENTS
     'rest_framework',
     'rest_framework.authtoken',

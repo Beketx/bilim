@@ -14,7 +14,7 @@ class Region(models.Model):
 class City(models.Model):
     title = models.CharField(max_length=100, null=True)
     region = models.ForeignKey('school.Region', on_delete=models.CASCADE,
-                                    related_name='city_region', verbose_name='City')
+                                    related_name='city_region', verbose_name='Region')
 
     def __str__(self):
         return self.title
