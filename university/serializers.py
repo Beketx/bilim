@@ -7,11 +7,11 @@ class UniversitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = University
-        fields = ['title', 'address']
+        fields = ['id', 'title', 'address']
 
 
 class FacultySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Faculty
-        fields = ['title', 'university__title']
+        fields = ['id', 'title', 'university__title']
