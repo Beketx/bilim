@@ -22,11 +22,13 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from authorize.urls import router as auth_router
 from university.urls import router as university_router
+from tasker.urls import router as tasker_router
 from bilim import settings
 
 router = DefaultRouter()
 router.registry.extend(auth_router.registry)
 router.registry.extend(university_router.registry)
+router.registry.extend(tasker_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
