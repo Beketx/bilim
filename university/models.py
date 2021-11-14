@@ -6,6 +6,7 @@ class University(models.Model):
     city = models.ForeignKey('school.City', on_delete=models.SET_NULL, null=True, related_name='city_universities',
                              verbose_name='City')
     address = models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(null=True, verbose_name='Photo')
 
     def __str__(self):
         return self.title

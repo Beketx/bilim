@@ -4,7 +4,7 @@ from university.models import University, Faculty, Specialty
 
 @admin.register(University)
 class UniversityAdmin(admin.ModelAdmin):
-    list_display = ('title', 'city', 'address')
+    list_display = ('title', 'city', 'address', 'image')
     search_fields = ('title',)
 
 
