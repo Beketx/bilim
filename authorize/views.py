@@ -77,11 +77,11 @@ class AuthViewSet(viewsets.GenericViewSet):
             codes = UserActivation.objects.filter(code=code)
             if not codes:
                 UserActivation.objects.create(user=user, code=code)
-                send_mail('Добро пожаловать в Bilim.kz',
-                        'Код активации ' + str(code),
-                        'djangobeket@gmail.com',
-                        [user.email],
-                        fail_silently=False)
+                # send_mail('Добро пожаловать в Bilim.kz',
+                #         'Код активации ' + str(code),
+                #         'djangobeket@gmail.com',
+                #         [user.email],
+                #         fail_silently=False)
                 break
         return Response()
 

@@ -44,7 +44,7 @@ class RegisterSerializer(serializers.Serializer):
         user.set_password(validated_data.get('password'))
 
         # TODO is_active delete
-        user.is_active = False
+        user.is_active = True
 
         user.save()
         # Profile.objects.create(
