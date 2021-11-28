@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from django.core.cache import cache
+from django.core.mail import send_mail
+import random
 
 from authorize.models import User, UserActivation
 from authorize.serializers import LoginWriteSerializer, UserResponseSerializer, ForgetPasswordWriteSerializer, \
@@ -55,12 +57,11 @@ class AuthViewSet(viewsets.GenericViewSet):
         send_renew_link_to_mail(user, email, code)
         return Response({'status': 1, 'detail': 'Successfully sent to your email!'})
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['post'])
     def activate(self, request, **kwargs):
         """Activating an account with a code from your email"""
-        serializer = ActivateSerializer(data=request.GET)
+        serializer = ActivateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         activate_user(serializer.validated_data.get('code'))
 
         return Response()
@@ -70,8 +71,18 @@ class AuthViewSet(viewsets.GenericViewSet):
         """Account registration"""
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-
+        user = serializer.save()
+        while True:
+            code = random.randint(111111,999999)
+            codes = UserActivation.objects.filter(code=code)
+            if not codes:
+                UserActivation.objects.create(user=user, code=code)
+                send_mail('Добро пожаловать в Bilim.kz',
+                        'Код активации ' + str(code),
+                        'djangobeket@gmail.com',
+                        [user.email],
+                        fail_silently=False)
+                break
         return Response()
 
     @action(detail=False, methods=['get'], permission_classes=(IsAuthenticated,))

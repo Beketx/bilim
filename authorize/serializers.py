@@ -12,10 +12,11 @@ class LoginWriteSerializer(serializers.Serializer):
 
 
 class RegisterSerializer(serializers.Serializer):
-    full_name = serializers.CharField(required=True, max_length=14)
+    name = serializers.CharField(required=True, max_length=100)
+    surname = serializers.CharField(required=True, max_length=100)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
-    school = serializers.PrimaryKeyRelatedField(queryset=School.objects.all(), required=True)
+    # school = serializers.PrimaryKeyRelatedField(queryset=School.objects.all(), required=True)
 
     def validate(self, attrs):
         if User.objects.filter(email=attrs.get('email')).count() > 0:
@@ -38,18 +39,18 @@ class RegisterSerializer(serializers.Serializer):
         # )
         user = User.objects.create(
             email=validated_data.get('email'),
-            full_name=validated_data.get('email')
+            name=validated_data.get('email')
         )
         user.set_password(validated_data.get('password'))
 
         # TODO is_active delete
-        user.is_active = True
+        user.is_active = False
 
         user.save()
-        Profile.objects.create(
-            user=user,
-            school=validated_data.get('school')
-        )
+        # Profile.objects.create(
+        #     user=user,
+        #     school=validated_data.get('school')
+        # )
         #
         # company_user = CompanyUser.objects.create(
         #     company=company,
@@ -59,7 +60,7 @@ class RegisterSerializer(serializers.Serializer):
         #                                  is_active=True)
         # company_user.roles.add(administrator)
         # company_user.save()
-        return validated_data
+        return user
 
 
 class ForgetPasswordWriteSerializer(serializers.Serializer):
@@ -82,7 +83,7 @@ class UserResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'full_name', 'auth_token', 'id')
+        fields = ('email', 'name', 'auth_token', 'id')
 
 
 

@@ -8,18 +8,18 @@ class UserActivationAdmin(admin.ModelAdmin):
     fields = ('user', 'code', 'created_at', 'activated_at')
     list_filter = ()
     readonly_fields = ('pk', 'created_at')
-    search_fields = ('user__phone', 'user__email', 'user__full_name')
+    search_fields = ('user__phone', 'user__email', 'user__name')
 
 #123
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'email', 'is_active', 'created_at')
+    list_display = ('name', 'phone', 'email', 'is_active', 'created_at')
     fields = (
-        'email', 'full_name', 'phone', 'photo', 'is_active', 'is_admin',
+        'email', 'name', 'phone', 'photo', 'is_active', 'is_admin',
         'created_at', 'password')
     list_filter = ()
     readonly_fields = ('pk',)
-    search_fields = ('email', 'phone', 'full_name')
+    search_fields = ('email', 'phone', 'name')
 
     def save_model(self, request, obj, form, change):
         if obj.pk:

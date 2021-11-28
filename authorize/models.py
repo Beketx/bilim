@@ -10,15 +10,16 @@ import os
 import uuid
 import binascii
 from bilim import settings
+from utils.consts import GENDER_CHOICES
 
 class UserManager(BaseUserManager):
     """Manager for creating Super user and Simple user"""
-    def create_user(self, email, full_name, phone, password=None):
-        if not email or not full_name or not phone:
-            raise ValueError('Users required fields [email, full_name, phone]')
+    def create_user(self, email, name, phone, password=None):
+        if not email or not name or not phone:
+            raise ValueError('Users required fields [email, name, phone]')
         user = self.model(
             email=self.normalize_email(email),
-            full_name=full_name,
+            name=name,
             phone=phone
         )
         user.set_password(password)
@@ -26,10 +27,10 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, full_name, phone, password):
+    def create_superuser(self, email, name, phone, password):
         user = self.create_user(
             email,
-            full_name,
+            name,
             phone,
             password=password
         )
@@ -49,7 +50,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     """Model of User, inherits from Django's AbstractBaseUser"""
     email = models.EmailField('eMail', unique=True, help_text='yourMail@bilim.kz')
-    full_name = models.CharField('Name Surname', max_length=100, null=True)
+    name = models.CharField('Name Surname', max_length=100, null=True)
+    surname = models.CharField('Name Surname', max_length=100, null=True)
     phone = models.CharField('Mobile phone', unique=True, max_length=12, help_text='77071113377',
                              null=True)
     photo = models.ImageField('Photo', null=True, blank=True)
@@ -59,7 +61,7 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['full_name', 'phone']
+    REQUIRED_FIELDS = ['name', 'phone']
 
     def __str__(self):
         return self.email
@@ -131,5 +133,7 @@ class UserActivation(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField('authorize.User', on_delete=models.CASCADE,
                                     related_name='user_profile', verbose_name='User')
+    # gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     school = models.OneToOneField('school.School', on_delete=models.CASCADE,
                                     related_name='school_profile', verbose_name='School')
+                                    
