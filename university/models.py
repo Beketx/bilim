@@ -1,5 +1,7 @@
 from django.db import models
 
+from school.models import SubjectFirst, SubjectSecond
+
 
 class University(models.Model):
     title = models.CharField(max_length=100, null=True)
@@ -7,7 +9,7 @@ class University(models.Model):
                              verbose_name='City')
     address = models.CharField(max_length=100, null=True, blank=True)
     image = models.ImageField(null=True, verbose_name='Photo')
-
+    
     def __str__(self):
         return self.title
 
@@ -18,7 +20,7 @@ class University(models.Model):
 
 class Faculty(models.Model):
     title = models.CharField(max_length=100, null=True)
-    university = models.ForeignKey('University', on_delete=models.SET_NULL, null=True, related_name='university_faculties',
+    university = models.ManyToManyField('University', related_name='university_faculties',
                                    verbose_name='University')
 
     def __str__(self):
@@ -40,3 +42,14 @@ class Specialty(models.Model):
     class Meta:
         verbose_name = 'Specialty'
         verbose_name_plural = 'Specialties'
+
+
+class GrantPoint(models.Model):
+    subject_first = models.ForeignKey(SubjectFirst, on_delete=models.SET_NULL, null=True, related_name='subject_first_grant',
+                                        verbose_name='First subject')
+    subject_second = models.ForeignKey(SubjectSecond, on_delete=models.SET_NULL, null=True, related_name='subject_second_grant',
+                                        verbose_name='Second subject')                                       
+    point = models.IntegerField()
+    specialty = models.ForeignKey('Specialty', on_delete=models.SET_NULL, null=True, related_name='specialty_grant_point',
+                                    verbose_name='Specialty')
+    

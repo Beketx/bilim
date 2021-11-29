@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from school.models import School, City, Region
+from school.models import School, City, Region, SubjectFirst, SubjectSecond
 
 
 @admin.register(School)
@@ -19,3 +19,15 @@ class CityAdmin(admin.ModelAdmin):
 class RegionAdmin(admin.ModelAdmin):
     search_fields = ('title',)
     list_display = ('id', 'title')
+
+
+@admin.register(SubjectFirst)
+class SubjectFirstAdmin(admin.ModelAdmin):
+    search_fields = ('title',)
+    list_display = ('id', 'title',)
+
+
+@admin.register(SubjectSecond)
+class SubjectFirstAdmin(admin.ModelAdmin):
+    search_fields = ('title',)
+    list_display = ('id', 'title',)

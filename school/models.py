@@ -36,8 +36,15 @@ class School(models.Model):
     class Meta:
         verbose_name = 'School'
         verbose_name_plural = 'Schools'
+    
 
-class Knowledge(models.Model):
+class SubjectFirst(models.Model):
+    title = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return self.title
+
+class SubjectSecond(models.Model):
     title = models.CharField(max_length=100, null=True)
 
     def __str__(self):
