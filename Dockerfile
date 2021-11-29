@@ -22,7 +22,6 @@ RUN python -m venv /py && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
-    chmod -R +x /university/migrations/ \
     chmod -R +x /scripts
 RUN apk add libpq jpeg-dev zlib-dev libjpeg
 ENV PATH="/scripts:/py/bin:$PATH"
