@@ -4,8 +4,8 @@ from rest_framework import serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
-from university.models import University, Faculty
-from university.serializers import UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
+from university.models import Specialty, University, Faculty
+from university.serializers import SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
 
 
 class UniversityView(viewsets.GenericViewSet):
@@ -46,3 +46,27 @@ class FacultyView(viewsets.GenericViewSet):
         serializer = DetailedFacultySerializer(faculty, many=True)
         print(serializer)
         return Response(serializer.data)
+
+class SpecialtyView(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    queryset = Specialty.objects.all()
+
+    def list(self, request):
+        serializer = SpecialtySerializer(self.queryset, many=True)
+
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        faculty = self.get_object()
+        serializer = SpecialtyDetailedSerializer(faculty)
+
+        return Response(serializer.data)
+    # def retrieve(self, request):
+    #     uni_id = request.GET.get('uni_id')
+    #     spec_id = request.GET.get('spec_id')
+    #     university = University.objects.filter(id=uni_id).first()
+    #     faculty = Faculty.objects.get(university=university)
+    #     specialty = Specialty.objects.filter()
+    #     serializer = SpecialtyDetailedSerializer(self.queryset, many=True)
+
+    #     return Response(serializer.data)

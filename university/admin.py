@@ -1,5 +1,5 @@
 from django.contrib import admin
-from university.models import GrantPoint, University, Faculty, Specialty
+from university.models import GrantPoint, University, Faculty, Specialty, Stuff
 
 
 @admin.register(University)
@@ -24,3 +24,7 @@ class GrantPointAdmin(admin.ModelAdmin):
     list_display = ('subject_first', 'subject_second', 'point', 'specialty')
     search_fields = ('specialty',)
 
+@admin.register(Stuff)
+class StuffAdmin(admin.ModelAdmin):
+    list_display = ('bio', 'university', 'faculty')
+    search_fields = ('university',)

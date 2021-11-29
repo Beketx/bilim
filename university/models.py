@@ -18,6 +18,14 @@ class University(models.Model):
         verbose_name_plural = 'Universities'
 
 
+class Stuff(models.Model):
+    bio = models.CharField(max_length=100, null=True)
+    university = models.ForeignKey('University', on_delete=models.SET_NULL, null=True, related_name='university_stuff',
+                             verbose_name='University')
+    faculty = models.ForeignKey('Faculty', on_delete=models.SET_NULL, null=True, related_name='faculty_stuff',
+                                   verbose_name='Faculty')
+
+
 class Faculty(models.Model):
     title = models.CharField(max_length=100, null=True)
     university = models.ManyToManyField('University', related_name='university_faculties',
