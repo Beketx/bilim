@@ -9,15 +9,24 @@ from django.core.mail import send_mail
 import random
 
 from authorize.models import User, UserActivation
-from authorize.serializers import LoginWriteSerializer, UserResponseSerializer, ForgetPasswordWriteSerializer, \
+from authorize.serializers import LoginWriteSerializer, ProfileSerializer, UserResponseSerializer, ForgetPasswordWriteSerializer, \
     ActivateSerializer, RegisterSerializer
 from authorize.services.auth_token import delete_token
 from authorize.services.auth_user import authenticate_user, get_client_ip, user_email_existence, activate_user
 from authorize.services.user_mail import send_renew_link_to_mail
 
 
-class AuthViewSet(viewsets.GenericViewSet):
+class AuthViewSet(viewsets.GenericViewSet, viewsets.mixins.UpdateModelMixin):
+    queryset = User.objects.all()
+    serializer_class = ProfileSerializer
     permission_classes = [AllowAny]
+
+    def partial_update(self, request, *args, **kwargs):
+        serializer = ProfileSerializer(self.get_object(), data=request.data,
+                                        partial=True)
+        serializer.is_valid()
+        serializer.save()
+        return Response(ProfileSerializer(self.get_object()).data)                                
 
     @action(detail=False, methods=['post'])
     def login(self, request, **kwargs):
@@ -93,7 +102,11 @@ class AuthViewSet(viewsets.GenericViewSet):
         }
         return Response(data)
 
-
+    @action(detail=False, methods=['get'], permission_classes=(IsAuthenticated,))
+    def profile(self, request):
+        user = User.objects.get(id=request.user.id)
+        serializer = ProfileSerializer(user)
+        return Response(serializer.data)
 
 
 

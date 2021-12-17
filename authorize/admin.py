@@ -10,13 +10,13 @@ class UserActivationAdmin(admin.ModelAdmin):
     readonly_fields = ('pk', 'created_at')
     search_fields = ('user__phone', 'user__email', 'user__name')
 
-#123
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone', 'email', 'is_active', 'created_at')
+    list_display = ('name', 'phone', 'email', 'is_active', 'created_at', 'birthdate')
     fields = (
         'email', 'name', 'phone', 'photo', 'is_active', 'is_admin',
-        'created_at', 'password')
+        'created_at', 'password', 'birthdate')
     list_filter = ()
     readonly_fields = ('pk',)
     search_fields = ('email', 'phone', 'name')

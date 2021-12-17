@@ -26,6 +26,24 @@ class TaskView(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListMo
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+    
+    @action(
+        detail=False,
+        methods=["delete"],
+        name="Execute task",
+        url_path=r'(?P<id>\d+)/delete',
+        url_name="deletes-task"
+    )
+    def delete(self, request, id):
+        try:
+            task = models.Task.objects.filter(id=id).delete()
+            # tasks.send_beat_email.delay(request.user.email)
+            return Response({"detail": "Task has deleted"}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=406)
 
     @action(
         detail=False,

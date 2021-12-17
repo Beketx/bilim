@@ -4,7 +4,7 @@ from rest_framework import serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
-from university.models import Specialty, University, Faculty
+from university.models import Specialty, Survey, University, Faculty
 from university.serializers import SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
 
 
@@ -22,7 +22,29 @@ class UniversityView(viewsets.GenericViewSet):
         serializer = UniversityDetailedSerializer(university)
 
         return Response(serializer.data)
-
+    
+    @action(detail=False, methods=['post'])
+    def survey_save(self, request):
+        data = request.data
+        user = request.user
+        for survey in data['surveys']:
+            print(survey)
+            Survey.objects.create(user=user, string=survey)
+        return Response()
+    
+    @action(detail=False, methods=['get'])
+    def survey_get(self, request):
+        user = request.user
+        surveys = Survey.objects.filter(user=user)
+        if surveys:
+            data = []
+            for survey in surveys:
+                data.append(survey.string)
+            json = {
+                "surveys":data
+            }
+            return Response(json)
+        return Response()
 
 class FacultyView(viewsets.GenericViewSet):
     permission_classes = [AllowAny]

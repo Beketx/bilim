@@ -16,6 +16,7 @@ class RegisterSerializer(serializers.Serializer):
     surname = serializers.CharField(required=True, max_length=100)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
+    birthdate = serializers.DateField(required=True)
     # school = serializers.PrimaryKeyRelatedField(queryset=School.objects.all(), required=True)
 
     def validate(self, attrs):
@@ -39,7 +40,9 @@ class RegisterSerializer(serializers.Serializer):
         # )
         user = User.objects.create(
             email=validated_data.get('email'),
-            name=validated_data.get('email')
+            name=validated_data.get('name'),
+            surname=validated_data.get('surname'),
+            birthdate=validated_data.get('birthdate')
         )
         user.set_password(validated_data.get('password'))
 
@@ -86,7 +89,12 @@ class UserResponseSerializer(serializers.ModelSerializer):
         fields = ('email', 'name', 'auth_token', 'id')
 
 
-
+class ProfileSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ('name', 'surname', 'birthdate', 
+                    'phone', 'email')
 
 
 

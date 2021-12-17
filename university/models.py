@@ -9,7 +9,6 @@ class University(models.Model):
                              verbose_name='City')
     address = models.CharField(max_length=100, null=True, blank=True)
     image = models.ImageField(null=True, verbose_name='Photo')
-    
     def __str__(self):
         return self.title
 
@@ -61,3 +60,16 @@ class GrantPoint(models.Model):
     specialty = models.ForeignKey('Specialty', on_delete=models.SET_NULL, null=True, related_name='specialty_grant_point',
                                     verbose_name='Specialty')
     
+
+class Survey(models.Model):
+    user = models.ForeignKey('authorize.User', on_delete=models.CASCADE)
+    string = models.CharField(max_length=1000, null=True)
+
+class UniversityPassPoint(models.Model):
+    university = models.ForeignKey('University', related_name='university_points', on_delete=models.CASCADE,
+                                   verbose_name='University')
+    faculty = models.ForeignKey('Faculty', on_delete=models.SET_NULL, null=True, related_name='faculty_points',
+                                   verbose_name='Faculty')
+    specialty = models.ForeignKey('Specialty', on_delete=models.SET_NULL, null=True, related_name='specialty_points',
+                                    verbose_name='Specialty')                             
+    pass_point = models.IntegerField("Pass point for university", null=True, blank=True)

@@ -54,6 +54,7 @@ class User(AbstractBaseUser):
     surname = models.CharField('Name Surname', max_length=100, null=True)
     phone = models.CharField('Mobile phone', unique=True, max_length=12, help_text='77071113377',
                              null=True)
+    birthdate = models.DateField('Date of birth', null=True, blank=True)
     photo = models.ImageField('Photo', null=True, blank=True)
     created_at = models.DateTimeField('Date of registration', null=True, blank=True)
     is_active = models.BooleanField('Is active?', default=False)
