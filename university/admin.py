@@ -1,5 +1,5 @@
 from django.contrib import admin
-from university.models import GrantPoint, Survey, University, Faculty, Specialty, Stuff
+from university.models import GrantPoint, Survey, University, Faculty, Specialty, Stuff, UniversityPassPoint
 
 
 @admin.register(University)
@@ -33,3 +33,9 @@ class StuffAdmin(admin.ModelAdmin):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ('user', 'string')
     search_fields = ('user',)
+
+@admin.register(UniversityPassPoint)
+class UniversityPassPointAdmin(admin.ModelAdmin):
+    list_dislay = ('university', 'faculty', 'specialty', 'pass_point')
+    search_fields = ('specialty',)
+    

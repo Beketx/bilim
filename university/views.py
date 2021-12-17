@@ -4,7 +4,7 @@ from rest_framework import serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
-from university.models import Specialty, Survey, University, Faculty
+from university.models import Specialty, Survey, University, Faculty, UniversityPassPoint
 from university.serializers import SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
 
 
@@ -45,7 +45,19 @@ class UniversityView(viewsets.GenericViewSet):
             }
             return Response(json)
         return Response()
-
+    
+    @action(detail=False, methods=['post'])
+    def university_pass(self, request):
+        data = request.data
+        university_pass = UniversityPassPoint.objects.filter(university_id=data['university'],
+                                                            faculty_id=data['faculty'],
+                                                            specialty_id=data['specialty']).values_list('pass_point', flat=True)
+        avg_point = sum(university_pass)/len(university_pass)
+        percent = (data['point'] * 100)/avg_point
+        if percent > 100.00:
+            percent = 99
+        return Response({"result": f"{int(percent)}%"})
+        
 class FacultyView(viewsets.GenericViewSet):
     permission_classes = [AllowAny]
     queryset = Faculty.objects.all()
