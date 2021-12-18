@@ -1,11 +1,12 @@
+from django.db.models import query
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import serializers, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 
-from university.models import Specialty, Survey, University, Faculty, UniversityPassPoint
-from university.serializers import SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
+from university.models import Motivation, Specialty, Survey, University, Faculty, UniversityPassPoint
+from university.serializers import MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
 
 
 class UniversityView(viewsets.GenericViewSet):
@@ -104,3 +105,13 @@ class SpecialtyView(viewsets.GenericViewSet):
     #     serializer = SpecialtyDetailedSerializer(self.queryset, many=True)
 
     #     return Response(serializer.data)
+
+class MotivationView(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    queryset = Motivation.objects.all()
+
+    def list(self, request):
+        serializer = MotivationSerialzier(self.queryset, many=True)
+
+        return Response(serializer.data)
+        

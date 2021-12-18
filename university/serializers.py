@@ -98,3 +98,6 @@ class DetailedFacultySerializer(serializers.ModelSerializer):
 class DetailedUniversitySerializer(serializers.ModelSerializer):
     pass
     
+class MotivationSerialzier(serializers.Serializer):
+    quote = serializers.CharField()
+    
