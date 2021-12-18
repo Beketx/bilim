@@ -73,3 +73,8 @@ class UniversityPassPoint(models.Model):
     specialty = models.ForeignKey('Specialty', on_delete=models.SET_NULL, null=True, related_name='specialty_points',
                                     verbose_name='Specialty')                             
     pass_point = models.IntegerField("Pass point for university", null=True, blank=True)
+
+
+class Motivation(models.Model):
+    quote = models.CharField(max_length=1000, null=True)
+    
