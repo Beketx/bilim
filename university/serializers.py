@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from school.models import SubjectFirst
+from university.admin import UserPassPointAdmin
 
-from university.models import Specialty, Stuff, University, Faculty, GrantPoint
+from university.models import Specialty, Stuff, University, Faculty, GrantPoint, UserPassPoint
 
 
 class UniversitySerializer(serializers.ModelSerializer):
@@ -57,6 +58,14 @@ class SpecialtySerializer(serializers.ModelSerializer):
         grant = GrantPoint.objects.get(specialty=obj)
         return grant.point
 
+
+class SpecialtyWriteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Specialty
+        fields = ['id', 'title']
+
+
 class UniversityDetailedSerializer(serializers.ModelSerializer):
     specialty = serializers.SerializerMethodField('get_specialty')
     city = serializers.SerializerMethodField()
@@ -78,7 +87,7 @@ class FacultySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Faculty
-        fields = ['id', 'title', 'university__title']
+        fields = ['id', 'title']
 
 
 
@@ -100,4 +109,12 @@ class DetailedUniversitySerializer(serializers.ModelSerializer):
     
 class MotivationSerialzier(serializers.Serializer):
     quote = serializers.CharField()
-    
+
+class UserPassPointSerializer(serializers.ModelSerializer):
+    university = UniversitySerializer(read_only=True)
+    faculty = FacultySerializer(read_only=True)
+    specialty = SpecialtyWriteSerializer(read_only=True)
+
+    class Meta:
+        model = UserPassPoint
+        fields = ['id', 'university', 'faculty', 'specialty', 'result']

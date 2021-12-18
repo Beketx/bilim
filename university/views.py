@@ -5,8 +5,8 @@ from rest_framework import serializers, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 
-from university.models import Motivation, Specialty, Survey, University, Faculty, UniversityPassPoint
-from university.serializers import MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer
+from university.models import Motivation, Specialty, Survey, University, Faculty, UniversityPassPoint, UserPassPoint
+from university.serializers import MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer, UserPassPointSerializer
 
 
 class UniversityView(viewsets.GenericViewSet):
@@ -50,14 +50,36 @@ class UniversityView(viewsets.GenericViewSet):
     @action(detail=False, methods=['post'])
     def university_pass(self, request):
         data = request.data
+        user = request.user
         university_pass = UniversityPassPoint.objects.filter(university_id=data['university'],
                                                             faculty_id=data['faculty'],
                                                             specialty_id=data['specialty']).values_list('pass_point', flat=True)
+
         avg_point = sum(university_pass)/len(university_pass)
         percent = (data['point'] * 100)/avg_point
         if percent > 100.00:
             percent = 99
+        UserPassPoint.objects.create(user=user, university_id=data['university'],
+                                                            faculty_id=data['faculty'],
+                                                            specialty_id=data['specialty'],
+                                                            result=f"{int(percent)}%")
         return Response({"result": f"{int(percent)}%"})
+    
+    @action(detail=False, methods=['get'])
+    def user_results(self, request):
+        user = request.user
+        user_pass = UserPassPoint.objects.filter(user_id=user.id)
+        serializer = UserPassPointSerializer(user_pass, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'])
+    def user_results(self, request, pk):
+        try:
+            user_pass = UserPassPoint.objects.get(id=pk)
+            serializer = UserPassPointSerializer(user_pass)
+            return Response(serializer.data)
+        except:
+            return Response({"error": "Not found"})
         
 class FacultyView(viewsets.GenericViewSet):
     permission_classes = [AllowAny]
@@ -114,4 +136,3 @@ class MotivationView(viewsets.GenericViewSet):
         serializer = MotivationSerialzier(self.queryset, many=True)
 
         return Response(serializer.data)
-        

@@ -60,7 +60,6 @@ class GrantPoint(models.Model):
     specialty = models.ForeignKey('Specialty', on_delete=models.SET_NULL, null=True, related_name='specialty_grant_point',
                                     verbose_name='Specialty')
     
-
 class Survey(models.Model):
     user = models.ForeignKey('authorize.User', on_delete=models.CASCADE)
     string = models.CharField(max_length=1000, null=True)
@@ -74,7 +73,15 @@ class UniversityPassPoint(models.Model):
                                     verbose_name='Specialty')                             
     pass_point = models.IntegerField("Pass point for university", null=True, blank=True)
 
+class UserPassPoint(models.Model):
+    user = models.ForeignKey('authorize.User', on_delete=models.CASCADE)
+    university = models.ForeignKey('University', related_name='university_user_pass', on_delete=models.CASCADE,
+                                   verbose_name='University')
+    faculty = models.ForeignKey('Faculty', on_delete=models.SET_NULL, null=True, related_name='faculty_user_pass',
+                                   verbose_name='Faculty')
+    specialty = models.ForeignKey('Specialty', on_delete=models.SET_NULL, null=True, related_name='specialty_user_pass',
+                                    verbose_name='Specialty')   
+    result = models.CharField(max_length=50, null=True)
 
 class Motivation(models.Model):
     quote = models.CharField(max_length=1000, null=True)
-    
