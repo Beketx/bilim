@@ -6,7 +6,7 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 
 from university.models import Motivation, Specialty, Survey, University, Faculty, UniversityPassPoint, UserPassPoint
-from university.serializers import MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer, UserPassPointSerializer
+from university.serializers import MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedReadSerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer, UserPassPointSerializer
 
 
 class UniversityView(viewsets.GenericViewSet):
@@ -20,7 +20,7 @@ class UniversityView(viewsets.GenericViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         university = self.get_object()
-        serializer = UniversityDetailedSerializer(university)
+        serializer = UniversityDetailedReadSerializer(university)
 
         return Response(serializer.data)
     

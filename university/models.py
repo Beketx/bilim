@@ -9,6 +9,11 @@ class University(models.Model):
                              verbose_name='City')
     address = models.CharField(max_length=100, null=True, blank=True)
     image = models.ImageField(null=True, verbose_name='Photo')
+    estated = models.DateField(null=True, blank=True)
+    faculties = models.IntegerField(null=True, blank=True)
+    specialties = models.IntegerField(null=True, blank=True)
+    students = models.IntegerField(null=True, blank=True)
+
     def __str__(self):
         return self.title
 

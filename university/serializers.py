@@ -83,6 +83,12 @@ class UniversityDetailedSerializer(serializers.ModelSerializer):
         serializer = SpecialtySerializer(specialties, many=True)
         return serializer.data
 
+class UniversityDetailedReadSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = University
+        fields = '__all__'
+
 class FacultySerializer(serializers.ModelSerializer):
 
     class Meta:
