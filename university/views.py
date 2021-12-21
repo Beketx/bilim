@@ -95,6 +95,13 @@ class FacultyView(viewsets.GenericViewSet):
         serializer = FacultySerializer(faculty)
 
         return Response(serializer.data)
+    
+    @action(methods=['get'], detail=True)
+    def university(self, request, pk):
+        faculties = Faculty.objects.filter(university=pk)
+        serializer = FacultySerializer(self.queryset, many=True)
+
+        return Response(serializer.data)        
 
     #TODO: Список универов При клике на обьект показывает -> Список професси каждого уника и проф предметы
     @action(methods=['GET'], detail=False)
@@ -118,6 +125,13 @@ class SpecialtyView(viewsets.GenericViewSet):
         serializer = SpecialtyDetailedSerializer(faculty)
 
         return Response(serializer.data)
+
+    @action(methods=['get'], detail=True)
+    def faculty(self, request, pk):
+        faculties = Specialty.objects.filter(faculty=pk)
+        serializer = SpecialtySerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
     # def retrieve(self, request):
     #     uni_id = request.GET.get('uni_id')
     #     spec_id = request.GET.get('spec_id')
