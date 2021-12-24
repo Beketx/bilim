@@ -109,6 +109,25 @@ class DetailedFacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
         fields = ['id', 'title', 'specialty']
+    
+class DetailedReadFacultySerializer(serializers.ModelSerializer):
+
+    specialty = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Faculty
+        fields = ['id', 'title', 'specialty']
+    
+    def get_specialty(self, obj):
+        data = []
+        specialty = Specialty.objects.filter(faculty_id=obj.id)
+        for spec in specialty:
+            context = {
+                "id": spec.id,
+                "title": spec.title
+            }
+            data.append(context)
+        return data
 
 class DetailedUniversitySerializer(serializers.ModelSerializer):
     pass
