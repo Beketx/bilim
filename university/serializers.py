@@ -2,7 +2,7 @@ from rest_framework import serializers
 from school.models import SubjectFirst
 from university.admin import UserPassPointAdmin
 
-from university.models import Specialty, Stuff, University, Faculty, GrantPoint, UserPassPoint
+from university.models import Specialty, Stuff, University, Faculty, GrantPoint, UniversityPassPoint, UserPassPoint
 
 
 class UniversitySerializer(serializers.ModelSerializer):
@@ -143,3 +143,13 @@ class UserPassPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPassPoint
         fields = ['id', 'university', 'faculty', 'specialty', 'result']
+
+
+class UniversityPassPointSerializer(serializers.ModelSerializer):
+    university = UniversitySerializer(read_only=True)
+    faculty = FacultySerializer(read_only=True)
+    specialty = SpecialtyWriteSerializer(read_only=True)
+
+    class Meta:
+        model = UniversityPassPoint
+        fields = ['id', 'university', 'faculty', 'specialty', 'pass_point']

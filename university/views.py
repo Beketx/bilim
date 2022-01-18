@@ -6,7 +6,7 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 
 from university.models import Motivation, Specialty, Survey, University, Faculty, UniversityPassPoint, UserPassPoint
-from university.serializers import DetailedReadFacultySerializer, MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedReadSerializer, UniversityDetailedSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer, UserPassPointSerializer
+from university.serializers import DetailedReadFacultySerializer, MotivationSerialzier, SpecialtyDetailedSerializer, SpecialtySerializer, UniversityDetailedReadSerializer, UniversityDetailedSerializer, UniversityPassPointSerializer, UniversitySerializer, FacultySerializer, DetailedFacultySerializer, UserPassPointSerializer
 from university.services import count_score
 
 
@@ -48,6 +48,12 @@ class UniversityView(viewsets.GenericViewSet):
             return Response(json)
         return Response()
     
+    @action(detail=False, methods=['get'])
+    def user_results_list(self, requeset):
+        university = UniversityPassPoint.objects.all()
+        serializer = UniversityPassPointSerializer(university, many=True)
+        return Response(serializer.data)
+
     @action(detail=False, methods=['post'])
     def university_pass(self, request):
         data = request.data
@@ -55,6 +61,8 @@ class UniversityView(viewsets.GenericViewSet):
         university_pass = UniversityPassPoint.objects.filter(university_id=data['university'],
                                                             faculty_id=data['faculty'],
                                                             specialty_id=data['specialty']).values_list('pass_point', flat=True)
+        if len(university_pass) == 0:
+            return Response({"detail": "Not found such university datas"})
         percent = count_score(user, data, university_pass)
 
         return Response({"result": f"{int(percent)}%"})
@@ -73,7 +81,7 @@ class UniversityView(viewsets.GenericViewSet):
             serializer = UserPassPointSerializer(user_pass)
             return Response(serializer.data)
         except:
-            return Response({"error": "Not found"})
+            return Response({"detail": "Not found"})
     
     @action(detail=True, methods=['get'])
     def specialities(self, request, pk):
@@ -82,7 +90,7 @@ class UniversityView(viewsets.GenericViewSet):
             serializer = DetailedReadFacultySerializer(uni, many=True)
             return Response(serializer.data)
         except:
-            return Response({"error": "Not found"})
+            return Response({"detail": "Not found"})
         
 class FacultyView(viewsets.GenericViewSet):
     permission_classes = [AllowAny]
