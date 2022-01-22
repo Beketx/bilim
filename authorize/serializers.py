@@ -93,7 +93,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('name', 'surname', 'birthdate', 
+        fields = ('id', 'name', 'surname', 'birthdate', 
                     'phone', 'email')
 
 
