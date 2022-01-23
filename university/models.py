@@ -78,8 +78,8 @@ class UniversityPassPoint(models.Model):
                                     verbose_name='Specialty')                             
     pass_point = models.IntegerField("Pass point for university", null=True, blank=True)
 
-    def __str__(self):
-        return self.specialty
+    # def __str__(self):
+    #     # return self.specialty
 
 class UserPassPoint(models.Model):
     user = models.ForeignKey('authorize.User', on_delete=models.CASCADE)
@@ -91,8 +91,8 @@ class UserPassPoint(models.Model):
                                     verbose_name='Specialty')   
     result = models.CharField(max_length=50, null=True)
 
-    def __str__(self):
-        return self.university
+    # def __str__(self):
+    #     return self.university
 
 class Motivation(models.Model):
     quote = models.CharField(max_length=1000, null=True)
