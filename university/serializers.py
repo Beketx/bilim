@@ -40,7 +40,7 @@ class SpecialtyDetailedSerializer(serializers.ModelSerializer):
         return subject_two.subject_second.title
     
     def get_stuff(self, obj):
-        stuff = Stuff.objects.get(faculty=obj.faculty)
+        stuff = Stuff.objects.filter(faculty=obj.faculty).first()
         return stuff.bio
 
 

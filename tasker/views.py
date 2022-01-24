@@ -57,9 +57,11 @@ class TaskView(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListMo
             task = models.Task.objects.filter(id=id).first()
             if task and task.status == False:      
                 task = models.Task.objects.filter(id=id).update(status=True)
-            if task and task.status == True:
+                return Response({"detail": "Task has done"}, status=200)
+            elif task and task.status == True:
                 task = models.Task.objects.filter(id=id).update(status=False)
+                return Response({"detail": "Task has not done"}, status=200)
             # tasks.send_beat_email.delay(request.user.email)
-            return Response({"detail": "Task has done"}, status=200)
+
         except Exception as e:
             return Response({"detail": str(e)}, status=406)
