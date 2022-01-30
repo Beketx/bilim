@@ -101,15 +101,15 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_URL'),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        }
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": os.environ.get('REDIS_URL'),
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
+#         }
+#     }
+# }
 
 
 # Password validation
@@ -176,29 +176,44 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_HEADERS = ['*']
+from corsheaders.defaults import default_headers
 
-CELERY_IGNORE_RESULT = True
-CELERY_DEFAULT_QUEUE = 'default'
-CELERY_DEFAULT_HIGH = 'high'
-CELERY_QUEUES = (
-    Queue('default', routing_key='default'),
-    Queue('high', routing_key='high'),
+CORS_ALLOW_HEADERS = default_headers + (
+    'Access-Control-Allow-Origin',
 )
-CELERY_ROUTES = {
-    # -- HIGH PRIORITY QUEUE -- #
-    'authorize.tasks.user_mail': {'queue': 'high'},
-    # 'Operation.tasks.email_send_check_pdf': {'queue': 'high'},
-    # 'Operation.tasks.email_z_report': {'queue': 'high'},
-    # 'Operation.tasks.one_day_shift': {'queue': 'high'},
-    # 'Place.tasks.auto_closin_shift_task': {'queue': 'high'},
-    # -- DEFAULT QUEUE -- #
-    # 'Place.tasks.check_blocking': {'queue': 'default'},
-    # 'Place.tasks.offline_mode': {'queue': 'default'},
-    # 'Place.tasks.send_offline': {'queue': 'default'},
-    # 'Server.tasks.graylogging': {'queue': 'default'},
+
+from celery.schedules import crontab
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "bilim.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
 }
-CELERYD_PREFETCH_MULTIPLIER = os.environ.get('CELERYD_PREFETCH_MULTIPLIER')
+
+# CELERY_IGNORE_RESULT = True
+# CELERY_DEFAULT_QUEUE = 'default'
+# CELERY_DEFAULT_HIGH = 'high'
+# CELERY_QUEUES = (
+#     Queue('default', routing_key='default'),
+#     Queue('high', routing_key='high'),
+# )
+# CELERY_ROUTES = {
+#     # -- HIGH PRIORITY QUEUE -- #
+#     'authorize.tasks.user_mail': {'queue': 'high'},
+#     'Operation.tasks.email_send_check_pdf': {'queue': 'high'},
+#     'Operation.tasks.email_z_report': {'queue': 'high'},
+#     'Operation.tasks.one_day_shift': {'queue': 'high'},
+#     'Place.tasks.auto_closin_shift_task': {'queue': 'high'},
+#     # -- DEFAULT QUEUE -- #
+#     'Place.tasks.check_blocking': {'queue': 'default'},
+#     'Place.tasks.offline_mode': {'queue': 'default'},
+#     'Place.tasks.send_offline': {'queue': 'default'},
+#     'Server.tasks.graylogging': {'queue': 'default'},
+# }
+# CELERYD_PREFETCH_MULTIPLIER = os.environ.get('CELERYD_PREFETCH_MULTIPLIER')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
