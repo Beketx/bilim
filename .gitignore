@@ -8,3 +8,5 @@ storage
 venv
 .idea
 data/
+test.py
+docs.txt
