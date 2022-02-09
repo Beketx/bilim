@@ -14,8 +14,8 @@ logger = get_task_logger(__name__)
 def sample_task():
     logger.info("The sample task just ran.")
 
-@shared_task
-def car_add():
+@app.task
+def car_add_task():
     letters = string.ascii_lowercase
     title = ''.join(random.choice(letters) for i in range(20))
     age = random.randint(0,9)
@@ -25,6 +25,11 @@ def car_add():
         age=age,
         model=model
     )
+
+@shared_task
+def car_add():
+    # car_add_task.delay()
+    car_add_task.delay()
 
 @app.task
 def add(x, y):
