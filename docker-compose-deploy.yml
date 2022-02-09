@@ -18,13 +18,14 @@ services:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     depends_on:
       - db
-      
+
   redis:
     image: redis:alpine
   
   celery:
     restart: always
     build: .
+    user: root
     command: celery -A bilim worker -l info
     volumes:
       - .:/app
@@ -36,6 +37,7 @@ services:
   
   celery-beat:
     build: .
+    user: root
     command: celery -A bilim beat -l info
     volumes:
       - .:/app
