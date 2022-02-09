@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 from kombu import Queue
 from celery.schedules import crontab
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'university',
     'student',
     'tasker',
+    'juicy',
     # REQUIREMENTS
     'rest_framework',
     'rest_framework.authtoken',
@@ -101,16 +103,17 @@ DATABASES = {
     }
 }
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://redis:6379",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
-#         }
-#     }
-# }
-
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        }
+    }
+}
+# Cache time to live is 15 minutes.
+CACHE_TTL = 60 * 15
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -193,7 +196,20 @@ CELERY_BEAT_SCHEDULE = {
         "task": "bilim.tasks.sample_task",
         "schedule": crontab(minute="*/1"),
     },
+    "chain_trek": {
+        "task": "bilim.tasks.chain_trek",
+        "schedule": timedelta(seconds=15)
+    },
+    "group_trek": {
+        "task": "bilim.tasks.group_trek",
+        "schedule": timedelta(seconds=10)
+    },
+    "car_add": {
+        "task": "bilim.tasks.car_add",
+        "schedule": crontab(minute="*/1"),
+    },
 }
+# 
 # CELERY_IGNORE_RESULT = True
 # CELERY_DEFAULT_QUEUE = 'default'
 # CELERY_DEFAULT_HIGH = 'high'

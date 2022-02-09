@@ -4,7 +4,7 @@ from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bilim.settings')
 
-app = Celery('bilim', broker='redis://redis:6379')
+app = Celery('bilim')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 

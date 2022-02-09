@@ -4,7 +4,6 @@ djangorestframework==3.12.4
 django-cors-headers==3.7.0
 uWSGI
 Pillow==8.3.1
-celery==5.1.2
 requests==2.26.0
 environ
 psycopg2
