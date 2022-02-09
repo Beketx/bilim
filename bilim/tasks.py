@@ -14,7 +14,7 @@ logger = get_task_logger(__name__)
 def sample_task():
     logger.info("The sample task just ran.")
 
-@app.task
+@shared_task
 def car_add():
     letters = string.ascii_lowercase
     title = ''.join(random.choice(letters) for i in range(20))
