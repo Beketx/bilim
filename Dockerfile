@@ -28,4 +28,6 @@ ENV PATH="/scripts:/py/bin:$PATH"
 
 USER app
 
-CMD ["run.sh"]
+CMD ["run.sh", "celery", "-A", "bilim.celery","-E", "-B", \
+     "-s", "/celerybeat-schedule"]
+     
