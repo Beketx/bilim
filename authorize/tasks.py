@@ -8,7 +8,7 @@ from authorize.models import User
 # from Server.tasks import graylogging
 
 
-@app.task(queue="high")
+# @app.task(queue="high")
 def sending_mail_to_user(title='Онлайн Касса', to=None, content=None):
     """Sending a letter to the user's email. If there is an error, send logs to graylog"""
     try:
