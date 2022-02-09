@@ -29,12 +29,15 @@ def car_add_task():
 @shared_task
 def car_add():
     # car_add_task.delay()
-    car_add_task.delay()
+    car_add_task.apply_async()
 
 @app.task
 def add(x, y):
     return x + y
 """
+comany not tenant
+goods get service not detail
+
 When we chain tasks together, 
 the second task will take the results of the first task as its first argument,
 for example
