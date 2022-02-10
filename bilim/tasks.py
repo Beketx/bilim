@@ -69,10 +69,10 @@ The group function takes in a list of signatures.
 @shared_task
 def group_trek():
     result = job.apply_async()
-    results = "READY - - - - - - " + result.get()
-    logger.info(results)
-    logger.info(result.ready())
-    logger.info(result.successful())
+    # results = "READY - - - - - - " + result.get()
+    # logger.info(results)
+    # logger.info(result.ready())
+    # logger.info(result.successful())
 
 #chord(header)(callback)
 # callback = add.s()
