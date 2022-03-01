@@ -38,10 +38,8 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
   
   redis:
-    image: redis:alpine
-    # ports:
-    #   - "6379:6379"
-  
+    image: redis
+    
   celery:
     restart: always
     build: .
@@ -69,6 +67,20 @@ services:
     depends_on:
       - redis
 
+  flower: 
+    build: .
+    command: celery -A bilim flower --broker=redis://redis:6379/0 --port=5555
+    volumes:
+      - .:/app
+    ports:
+      - 5555:5555
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    depends_on:
+      - backend
+      - redis
+      - celery
       
 volumes:
   postgres-data:

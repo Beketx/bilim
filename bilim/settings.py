@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'celery'
+    'celery',
 ]
 
 MIDDLEWARE = [
@@ -106,7 +106,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "LOCATION": "redis://redis:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         }
@@ -189,26 +189,29 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = ['*']
 
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
-CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
-        "task": "bilim.tasks.sample_task",
-        "schedule": crontab(minute="*/1"),
-    },
-    "chain_trek": {
-        "task": "bilim.tasks.chain_trek",
-        "schedule": timedelta(seconds=15)
-    },
-    "group_trek": {
-        "task": "bilim.tasks.group_trek",
-        "schedule": timedelta(seconds=10)
-    },
-    "car_add": {
-        "task": "bilim.tasks.car_add",
-        "schedule": crontab(minute="*/1"),
-    },
-}
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/1"
+CELERY_BACKEND="redis://redis:6379/0"
+BROKER_URL = CELERY_BROKER_URL
+REDIS_URL = CELERY_BROKER_URL
+# CELERY_BEAT_SCHEDULE = {
+#     # "sample_task": {
+#     #     "task": "bilim.tasks.sample_task",
+#     #     "schedule": crontab(minute="*/1"),
+#     # },
+#     # "chain_trek": {
+#     #     "task": "bilim.tasks.chain_trek",
+#     #     "schedule": timedelta(seconds=15)
+#     # },
+#     # "group_trek": {
+#     #     "task": "bilim.tasks.group_trek",
+#     #     "schedule": timedelta(seconds=10)
+#     # },
+#     # "car_add": {
+#     #     "task": "bilim.tasks.car_add",
+#     #     "schedule": crontab(minute="*/1"),
+#     # },
+# }
 # 
 # CELERY_IGNORE_RESULT = True
 # CELERY_DEFAULT_QUEUE = 'default'
@@ -230,7 +233,7 @@ CELERY_BEAT_SCHEDULE = {
 #     # 'Place.tasks.send_offline': {'queue': 'default'},
 #     # 'Server.tasks.graylogging': {'queue': 'default'},
 # }
-# CELERYD_PREFETCH_MULTIPLIER = os.environ.get('CELERYD_PREFETCH_MULTIPLIER')
+CELERYD_PREFETCH_MULTIPLIER = 1
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

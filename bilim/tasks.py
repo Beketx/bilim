@@ -15,6 +15,17 @@ def sample_task():
     logger.info("The sample task just ran.")
 
 @app.task
+def send_beat_email(email):
+    logger.info("The sample task just ran.")
+    send_mail(
+        'Task',
+        'Your task is done',
+        'djangobeket@gmail.com',
+        [email],
+        fail_silently=False
+    )
+
+@app.task
 def car_add_task():
     letters = string.ascii_lowercase
     title = ''.join(random.choice(letters) for i in range(20))
@@ -30,6 +41,7 @@ def car_add_task():
 def car_add():
     # car_add_task.delay()
     car_add_task.apply_async()
+    send_beat_email.delay("beketsk@gmail.com")
 
 @app.task
 def add(x, y):
@@ -79,13 +91,3 @@ def group_trek():
 # header = [add.s(2,2), add.s(4,4)]
 # result = chord(header)(callback)
 # result.get()
-
-# @app.task
-# def send_beat_email(email):
-#         send_mail(
-#             'Task',
-#             'Your task is done',
-#             'beketdjango@gmail.com',
-#             [email],
-#             fail_silently=False
-#         )

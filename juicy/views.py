@@ -11,6 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from authorize.models import User
+from bilim.tasks import send_beat_email, add
 
 from .models import Car, Computer, Mouse
 from .serializers import CarSerializers, ComputerSerializers, MouseSerializers
@@ -49,13 +50,19 @@ class JuicyView(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Computer.objects.all()
     
-    @cache_page(CACHE_TTL)
+    # @cache_page(CACHE_TTL)
     def list(self, request):
-        serializer = ComputerSerializers(self.queryset, many=True)
-        return Response(serializer.data)
+        print(1)
+        # x = add.delay(1,2)
+        send_beat_email.delay("beketsk@gmail.com")
+        # print("################", x)
+        # serializer = ComputerSerializers(self.queryset, many=True)
+        # return Response(serializer.data)
+        return Response()
 
     @action(detail=False, methods=['get'])
     def create_car(self, request):
+        x = add.delay(1,2)
         for _ in range(1000):
             letters = string.ascii_lowercase
             title = ''.join(random.choice(letters) for i in range(20))
