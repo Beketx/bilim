@@ -11,7 +11,7 @@ from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
 from authorize.models import User
-from bilim.tasks import send_beat_email, add
+from bilim.tasks import send_beat_email, add, retry_test
 
 from .models import Car, Computer, Mouse
 from .serializers import CarSerializers, ComputerSerializers, MouseSerializers
@@ -54,7 +54,8 @@ class JuicyView(viewsets.GenericViewSet):
     def list(self, request):
         print(1)
         # x = add.delay(1,2)
-        send_beat_email.delay("beketsk@gmail.com")
+        # send_beat_email.delay("beketsk@gmail.com")
+        retry_test.delay(1)
         # print("################", x)
         # serializer = ComputerSerializers(self.queryset, many=True)
         # return Response(serializer.data)

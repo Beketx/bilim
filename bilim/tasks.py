@@ -43,6 +43,31 @@ def car_add():
     car_add_task.apply_async()
     send_beat_email.delay("beketsk@gmail.com")
 
+
+"""
+Retrying a task
+"""
+@shared_task(bind=True, max_retries=3) # you can determine the max_retries here
+def retry_test(self, pk):
+    from juicy.models import Car
+    from requests import ConnectionError
+
+    
+
+    # If ConnectionError try again in 180 seconds
+    try:
+        o = Car.objects.get(pk=pk)
+    except:
+        self.retry(countdown=5) # the task goes back to the queue
+
+"""
+ETA — Scheduling a task for later
+"""
+#https://medium.com/hackernoon/using-celery-with-multiple-queues-retries-and-scheduled-tasks-589fe9a4f9ba
+#https://betterprogramming.pub/python-celery-best-practices-ae182730bb81
+#https://stackoverflow.com/questions/57792410/celery-enqueuing-multiple-100-1000-tasks-at-the-same-time-via-send-task
+#https://www.google.com/search?q=celery+a+lot+tasks+at+same+time+case+mediuim&sxsrf=APq-WBsM-yC1Wbegk-m7YlT4AOp35PzBxg%3A1646213827922&ei=wzofYo_aN9GHwPAPg9CW6Ag&ved=0ahUKEwjPx7-zkKf2AhXRAxAIHQOoBY0Q4dUDCA4&uact=5&oq=celery+a+lot+tasks+at+same+time+case+mediuim&gs_lcp=Cgdnd3Mtd2l6EAMyBwghEAoQoAE6BwgAEEcQsAM6BQghEKABOgQIIRAVSgQIQRgASgQIRhgAUI0GWIsUYJIpaAJwAXgAgAHCAYgByAuSAQMwLjmYAQCgAQHIAQjAAQE&sclient=gws-wiz
+#https://git.uchet.kz/ukassa/web-kassa/-/blob/pre-production/Place/tasks.py
 @app.task
 def add(x, y):
     return x + y
